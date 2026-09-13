@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+<title>Centro de Control Frigurso</title>
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon.svg">
+<meta name="theme-color" content="#0b1220">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<style>
+  :root{
+    --bg:#0b1220;--bg2:#0f1830;--bg3:#16213f;--card:#121c38;
+    --text:#f5f7fa;--text2:#a9b6d0;--text3:#647297;
+    --rojo:#D7263D;--celeste:#5FB0E8;--border:#233156;
+    --shadow:0 2px 20px rgba(0,0,0,.5);
+    --font:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+    --sab:env(safe-area-inset-bottom,0px);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  html,body{overscroll-behavior-y:contain}
+  body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100dvh}
+  a{color:inherit;text-decoration:none}
+  button{font-family:var(--font);cursor:pointer;border:none;outline:none;background:none}
+  input{font-family:var(--font)}
+  ::-webkit-scrollbar{display:none}
+
+  .hero{position:relative;overflow:hidden;padding:calc(54px + env(safe-area-inset-top,0px)) 20px 40px;text-align:center;background:radial-gradient(ellipse 90% 70% at 50% -10%, rgba(95,176,232,.18) 0%, transparent 65%)}
+  .hero-sash{position:absolute;top:38%;left:-10%;width:120%;height:130px;background:linear-gradient(90deg,var(--rojo) 0%,var(--rojo) 92%,var(--celeste) 100%);transform:rotate(-8deg);opacity:.12;pointer-events:none}
+  .hero-word{position:relative;font-size:min(11vw,46px);font-weight:800;font-stretch:condensed;letter-spacing:.02em;text-transform:uppercase;color:var(--text)}
+  .hero-sub{position:relative;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--celeste);font-weight:700;margin-top:8px}
+  .hero-tag{position:relative;font-size:13px;color:var(--text3);margin-top:10px;font-style:italic}
+  .hero-count{position:relative;display:inline-block;margin-top:18px;padding:7px 16px;border-radius:99px;background:rgba(95,176,232,.12);border:1px solid rgba(95,176,232,.3);color:var(--celeste);font-size:12px;font-weight:700}
+
+  .search-wrap{padding:0 16px;margin-top:20px;max-width:640px;margin-left:auto;margin-right:auto}
+  .search-input{width:100%;padding:14px 16px;border-radius:14px;border:1px solid var(--border);background:var(--bg3);color:var(--text);font-size:15px}
+  .search-input:focus{outline:none;border-color:var(--celeste)}
+  .search-input::placeholder{color:var(--text3)}
+
+  .pill-row{display:flex;gap:8px;overflow-x:auto;padding:16px 16px 4px;max-width:1040px;margin:0 auto}
+  .pill{padding:9px 16px;border-radius:99px;font-size:12px;font-weight:700;border:1px solid var(--border);background:var(--bg3);color:var(--text2);cursor:pointer;white-space:nowrap;flex-shrink:0}
+  .pill.sel{background:linear-gradient(90deg,var(--rojo),var(--celeste));border-color:transparent;color:#fff}
+
+  .grid-wrap{max-width:1040px;margin:0 auto;padding:14px 16px calc(50px + var(--sab))}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:12px}
+  .app-card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:18px 14px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px;box-shadow:var(--shadow);transition:transform .15s,border-color .15s;position:relative;overflow:hidden}
+  .app-card:active{transform:scale(.96)}
+  .app-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--rojo),var(--celeste));opacity:0;transition:opacity .15s}
+  .app-card:hover::before{opacity:1}
+  .app-icon{width:54px;height:54px;border-radius:16px;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:26px}
+  .app-name{font-size:13px;font-weight:800;color:var(--text);line-height:1.25}
+  .app-desc{font-size:10.5px;color:var(--text3);line-height:1.4}
+  .app-cat{font-size:9px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--celeste);opacity:.85}
+
+  .empty{text-align:center;padding:60px 20px;color:var(--text3)}
+  .empty-icon{font-size:46px;margin-bottom:10px}
+
+  .foot{text-align:center;padding:10px 20px calc(30px + var(--sab));color:var(--text3);font-size:11px;line-height:1.6}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-sash"></div>
+  <div class="hero-word">Frigurso</div>
+  <div class="hero-sub">Centro de Control</div>
+  <div class="hero-tag">El ramo general de tu vida digital</div>
+  <div class="hero-count" id="contador-apps">0 apps</div>
+</div>
+
+<div class="search-wrap">
+  <input class="search-input" id="buscador" placeholder="Buscar una app..." oninput="render()">
+</div>
+
+<div class="pill-row" id="pill-categorias"></div>
+
+<div class="grid-wrap">
+  <div class="grid" id="grid-apps"></div>
+</div>
+
+<div class="foot">Frigurso Seguridad guarda tus contraseñas — este panel solo abre las apps, no ve nada de lo que hay adentro de cada una.</div>
+
+<script>
+const APPS=[
+  {nombre:'FootGolf', icono:'🏌️', desc:'La app de FootGolf más completa del mundo', url:'https://frigurso.vercel.app', cat:'Deporte'},
+  {nombre:'Salud', icono:'🩺', desc:'Deporte GPS, mediciones, nutrición y rutinas', url:'https://fernandoanzisi.github.io/frigurso-salud/', cat:'Deporte'},
+  {nombre:'Canchita', icono:'⚽', desc:'Partidos, jugadores y estadísticas de fulbito', url:'https://fernandoanzisi.github.io/frigurso-canchita/', cat:'Deporte'},
+  {nombre:'Fútbol', icono:'🥅', desc:'Resultados, posiciones y ficha de tu equipo', url:'https://fernandoanzisi.github.io/frigurso-futbol/', cat:'Deporte'},
+  {nombre:'Finanzas', icono:'💰', desc:'Gastos, cuentas, tarjetas, inversiones y viajes', url:'https://fernandoanzisi.github.io/frigurso-finanzas/', cat:'Finanzas'},
+  {nombre:'Sistema Financiero', icono:'💼', desc:'Flujo de fondos, órdenes de pago y conciliación', url:'https://fernandoanzisi.github.io/frigurso-sistema-financiero-contable/', cat:'Finanzas'},
+  {nombre:'Wallet Central', icono:'👛', desc:'Bancos y billeteras consolidados, cotizaciones', url:'https://fernandoanzisi.github.io/frigurso-wallet-central/', cat:'Finanzas'},
+  {nombre:'Conciliaciones', icono:'🔄', desc:'Motor de conciliación bancaria e informes', url:'https://fernandoanzisi.github.io/frigurso-conciliaciones/', cat:'Finanzas'},
+  {nombre:'Inversiones', icono:'📈', desc:'Cartera, acciones, cripto y dólar en vivo', url:'https://fernandoanzisi.github.io/frigurso-inversiones/', cat:'Finanzas'},
+  {nombre:'Seguridad', icono:'🔒', desc:'Tu bóveda de contraseñas, cifrada', url:'https://fernandoanzisi.github.io/frigurso-seguridad/', cat:'Utilidades'},
+  {nombre:'Agenda', icono:'📅', desc:'Recordatorios con Web Push, entrada rápida', url:'https://fernandoanzisi.github.io/frigurso-agenda/', cat:'Utilidades'},
+  {nombre:'Satelital', icono:'🛰️', desc:'GPS satelital, radares, combustible y ruta', url:'https://fernandoanzisi.github.io/frigurso-satelital/', cat:'Utilidades'},
+  {nombre:'Control', icono:'🖱️', desc:'Tu celular como mouse, teclado y presentador', url:'https://fernandoanzisi.github.io/frigurso-control/', cat:'Utilidades'},
+  {nombre:'Lector', icono:'📖', desc:'OCR de fotos y escaneos a libro legible', url:'https://frigurso-lector.vercel.app', cat:'Utilidades'},
+  {nombre:'Escuela', icono:'🏫', desc:'Gestión integral: académico, edificio y finanzas', url:'https://fernandoanzisi.github.io/FRIGURSO-ESCUELA/', cat:'Utilidades'},
+  {nombre:'Clima', icono:'⛅', desc:'Clima real, satélite, polen y despertador con voz', url:'https://fernandoanzisi.github.io/frigurso-clima/', cat:'Hogar y vida'},
+  {nombre:'Cocina', icono:'🍳', desc:'141 recetas propias y lugares reales para comer', url:'https://fernandoanzisi.github.io/frigurso-cocina/', cat:'Hogar y vida'},
+  {nombre:'Música', icono:'🎵', desc:'Música local, listas, ranking y letras traducidas', url:'https://fernandoanzisi.github.io/frigurso-musica/', cat:'Diversión'},
+  {nombre:'Mini Juegos', icono:'🎉', desc:'Tutti Fruti, Preguntados, Ahorcado y más', url:'https://fernandoanzisi.github.io/frigurso-tutti-fruti/', cat:'Diversión'},
+  {nombre:'Ingeniería', icono:'🧪', desc:'Apuntes y calculadoras de Ing. Química FIUBA', url:'https://fernandoanzisi.github.io/frigurso-ingenieria/', cat:'Estudio'},
+];
+
+const CATEGORIAS=['Todas','Finanzas','Deporte','Hogar y vida','Diversión','Estudio','Utilidades'];
+let _cat='Todas';
+
+function renderPills(){
+  document.getElementById('pill-categorias').innerHTML=CATEGORIAS.map(c=>
+    `<button class="pill ${_cat===c?'sel':''}" onclick="_filtrar('${c}')">${c}</button>`
+  ).join('');
+}
+function _filtrar(c){ _cat=c; renderPills(); render(); }
+
+function _esc(s){ return (s||'').replace(/[&<>"]/g, ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch])); }
+
+function render(){
+  const q=(document.getElementById('buscador').value||'').toLowerCase().trim();
+  let lista=APPS.slice();
+  if(_cat!=='Todas') lista=lista.filter(a=>a.cat===_cat);
+  if(q) lista=lista.filter(a=>a.nombre.toLowerCase().includes(q)||a.desc.toLowerCase().includes(q));
+
+  document.getElementById('contador-apps').textContent=APPS.length+' apps en un solo lugar';
+
+  const grid=document.getElementById('grid-apps');
+  if(!lista.length){
+    grid.innerHTML=`<div class="empty" style="grid-column:1/-1"><div class="empty-icon">🔍</div>Sin resultados</div>`;
+    return;
+  }
+  grid.innerHTML=lista.map(a=>`
+    <a class="app-card" href="${a.url}" target="_blank" rel="noopener">
+      <div class="app-icon">${a.icono}</div>
+      <div class="app-name">${_esc(a.nombre)}</div>
+      <div class="app-desc">${_esc(a.desc)}</div>
+      <div class="app-cat">${_esc(a.cat)}</div>
+    </a>
+  `).join('');
+}
+
+renderPills();
+render();
+
+if('serviceWorker' in navigator){
+  window.addEventListener('load', ()=>{ navigator.serviceWorker.register('sw.js').catch(()=>{}); });
+}
+</script>
+</body>
+</html>
