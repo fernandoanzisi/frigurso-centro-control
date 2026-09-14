@@ -26,11 +26,49 @@
   ::-webkit-scrollbar{display:none}
 
   .hero{position:relative;overflow:hidden;padding:calc(54px + env(safe-area-inset-top,0px)) 20px 40px;text-align:center;background:radial-gradient(ellipse 90% 70% at 50% -10%, rgba(95,176,232,.18) 0%, transparent 65%)}
-  .hero-sash{position:absolute;top:38%;left:-10%;width:120%;height:130px;background:linear-gradient(90deg,var(--rojo) 0%,var(--rojo) 92%,var(--celeste) 100%);transform:rotate(-8deg);opacity:.12;pointer-events:none}
+  .hero-sash{position:absolute;top:38%;left:-10%;width:120%;height:130px;background:linear-gradient(90deg,var(--rojo) 0%,var(--rojo) 92%,var(--celeste) 100%);transform:rotate(-8deg);opacity:.14;pointer-events:none;animation:hero-sash-drift 14s ease-in-out infinite}
+  @keyframes hero-sash-drift{0%,100%{transform:rotate(-8deg) translateY(0)}50%{transform:rotate(-8deg) translateY(-10px)}}
+  .hero-crest{position:relative;width:76px;height:76px;margin:0 auto 16px;border-radius:22px;box-shadow:0 10px 30px rgba(215,38,61,.25),0 10px 30px rgba(95,176,232,.15)}
   .hero-word{position:relative;font-size:min(11vw,46px);font-weight:800;font-stretch:condensed;letter-spacing:.02em;text-transform:uppercase;color:var(--text)}
   .hero-sub{position:relative;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--celeste);font-weight:700;margin-top:8px}
   .hero-tag{position:relative;font-size:13px;color:var(--text3);margin-top:10px;font-style:italic}
   .hero-count{position:relative;display:inline-block;margin-top:18px;padding:7px 16px;border-radius:99px;background:rgba(95,176,232,.12);border:1px solid rgba(95,176,232,.3);color:var(--celeste);font-size:12px;font-weight:700}
+  @media (prefers-reduced-motion: reduce){ .hero-sash{animation:none} }
+
+/* ═══════════════════════════════════════════════════════════════
+   IDENTIDAD FRIGURSO — splash de marca (mismo bloque de las otras 20 apps)
+   ═══════════════════════════════════════════════════════════════ */
+#fg-splash{
+  position:fixed;inset:0;z-index:9000;background:#0b1220;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;
+  animation:fg-splash-out .6s ease 2.8s forwards;
+}
+.fg-sash{
+  position:absolute;width:130vw;height:22vh;max-height:170px;
+  background:linear-gradient(90deg,#d7263d 0%,#d7263d 92%,#5fb0e8 100%);
+  transform:rotate(-22deg) translateX(-140vw);top:46%;left:0;margin-top:-11vh;
+  box-shadow:0 0 60px rgba(215,38,61,.3);
+  animation:fg-sash-sweep 1.3s cubic-bezier(.16,.8,.24,1) both;
+}
+@keyframes fg-sash-sweep{0%{transform:rotate(-22deg) translateX(-140vw);}55%{transform:rotate(-22deg) translateX(0);}100%{transform:rotate(-22deg) translateX(0);}}
+@keyframes fg-splash-out{to{opacity:0;pointer-events:none;visibility:hidden;}}
+.fg-wordmark{
+  position:relative;z-index:5;font-weight:800;font-stretch:condensed;
+  font-size:min(11vw,42px);letter-spacing:.02em;
+  color:#f5f7fa;text-transform:uppercase;
+  opacity:0;transform:translateY(10px);animation:fg-word-in .5s ease .85s both;
+}
+@keyframes fg-word-in{to{opacity:1;transform:translateY(0);}}
+.fg-tagline{
+  position:relative;z-index:5;font-family:monospace;font-size:11px;letter-spacing:.18em;
+  text-transform:uppercase;color:#9fb0cc;margin-top:8px;
+  opacity:0;animation:fg-word-in .5s ease 1.05s both;
+}
+@media (prefers-reduced-motion: reduce){
+  .fg-sash{animation:none;transform:rotate(-22deg) translateX(0);}
+  .fg-wordmark,.fg-tagline{animation:none;opacity:1;transform:none;}
+  #fg-splash{animation-delay:.1s;}
+}
 
   .search-wrap{padding:0 16px;margin-top:20px;max-width:640px;margin-left:auto;margin-right:auto}
   .search-input{width:100%;padding:14px 16px;border-radius:14px;border:1px solid var(--border);background:var(--bg3);color:var(--text);font-size:15px}
@@ -43,10 +81,13 @@
 
   .grid-wrap{max-width:1040px;margin:0 auto;padding:14px 16px calc(50px + var(--sab))}
   .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:12px}
-  .app-card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:18px 14px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px;box-shadow:var(--shadow);transition:transform .15s,border-color .15s;position:relative;overflow:hidden}
+  .app-card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:18px 14px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px;box-shadow:var(--shadow);transition:transform .15s,border-color .15s,box-shadow .15s;position:relative;overflow:hidden;opacity:0;animation:card-in .45s ease both}
   .app-card:active{transform:scale(.96)}
+  .app-card:hover{transform:translateY(-3px);border-color:rgba(95,176,232,.4);box-shadow:0 10px 28px rgba(0,0,0,.4)}
   .app-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--rojo),var(--celeste));opacity:0;transition:opacity .15s}
   .app-card:hover::before{opacity:1}
+  @keyframes card-in{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+  @media (prefers-reduced-motion: reduce){ .app-card{animation:none;opacity:1} .app-card:hover{transform:none} }
   .app-icon{width:54px;height:54px;border-radius:16px;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:26px}
   .app-name{font-size:13px;font-weight:800;color:var(--text);line-height:1.25}
   .app-desc{font-size:10.5px;color:var(--text3);line-height:1.4}
@@ -60,8 +101,29 @@
 </head>
 <body>
 
+<div id="fg-splash" aria-hidden="true">
+  <div class="fg-sash"></div>
+  <div class="fg-wordmark">Frigurso</div>
+  <div class="fg-tagline">Centro de Control</div>
+</div>
+
 <div class="hero">
   <div class="hero-sash"></div>
+  <svg class="hero-crest" viewBox="0 0 512 512" role="img" aria-label="Frigurso">
+    <defs>
+      <linearGradient id="crestSash" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#D7263D"/>
+        <stop offset="1" stop-color="#5FB0E8"/>
+      </linearGradient>
+      <clipPath id="crestClip"><rect width="512" height="512" rx="112"/></clipPath>
+    </defs>
+    <g clip-path="url(#crestClip)">
+      <rect width="512" height="512" fill="#0b1220"/>
+      <text x="256" y="392" text-anchor="middle" font-family="-apple-system,'Segoe UI',sans-serif"
+        font-weight="800" font-size="440" fill="#f5f7fa" style="font-stretch:condensed">F</text>
+      <rect x="-60" y="150" width="640" height="120" fill="url(#crestSash)" transform="rotate(-14 256 256)"/>
+    </g>
+  </svg>
   <div class="hero-word">Frigurso</div>
   <div class="hero-sub">Centro de Control</div>
   <div class="hero-tag">El ramo general de tu vida digital</div>
@@ -129,8 +191,8 @@ function render(){
     grid.innerHTML=`<div class="empty" style="grid-column:1/-1"><div class="empty-icon">🔍</div>Sin resultados</div>`;
     return;
   }
-  grid.innerHTML=lista.map(a=>`
-    <a class="app-card" href="${a.url}" target="_blank" rel="noopener">
+  grid.innerHTML=lista.map((a,i)=>`
+    <a class="app-card" href="${a.url}" target="_blank" rel="noopener" style="animation-delay:${Math.min(i*30,300)}ms">
       <div class="app-icon">${a.icono}</div>
       <div class="app-name">${_esc(a.nombre)}</div>
       <div class="app-desc">${_esc(a.desc)}</div>
