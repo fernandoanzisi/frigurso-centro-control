@@ -1,11 +1,11 @@
-const CACHE = 'centro-control-v1';
+const CACHE = 'centro-control-v2';
 const PRECACHE = ['./', './index.html', './manifest.json'];
 
 self.addEventListener('install', e => {
   e.waitUntil(
     caches.open(CACHE).then(c =>
       Promise.all(PRECACHE.map(url => c.add(url).catch(() => {})))
-    ).then(() => self.skipWaiting())
+    )
   );
 });
 

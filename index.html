@@ -10,202 +10,337 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <style>
   :root{
-    --bg:#0b1220;--bg2:#0f1830;--bg3:#16213f;--card:#121c38;
-    --text:#f5f7fa;--text2:#a9b6d0;--text3:#647297;
-    --rojo:#D7263D;--celeste:#5FB0E8;--border:#233156;
-    --shadow:0 2px 20px rgba(0,0,0,.5);
+    --bg:#0b1220;--bg2:#0f1830;--card:#121c38;--card2:#0e1730;--border:#233156;
+    --text:#f5f7fa;--muted:#8fa0c4;--muted2:#5d6f95;
+    --rojo:#D7263D;--celeste:#5FB0E8;
+    --gold:#ffc64d;--green:#5ddd7d;--orange:#fb923c;--violet:#bd7cff;--cyan:#2dd4bf;
     --font:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+    --mono:'SF Mono','Fira Code',ui-monospace,monospace;
     --sab:env(safe-area-inset-bottom,0px);
   }
   *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
   html,body{overscroll-behavior-y:contain}
-  body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100dvh}
+  body{
+    font-family:var(--font);color:var(--text);min-height:100dvh;
+    background:radial-gradient(1200px 600px at 12% -10%, #16305a 0%, transparent 58%), var(--bg);
+  }
   a{color:inherit;text-decoration:none}
   button{font-family:var(--font);cursor:pointer;border:none;outline:none;background:none}
   input{font-family:var(--font)}
   ::-webkit-scrollbar{display:none}
+  ::selection{background:rgba(95,176,232,.3)}
 
-  .hero{position:relative;overflow:hidden;padding:calc(54px + env(safe-area-inset-top,0px)) 20px 40px;text-align:center;background:radial-gradient(ellipse 90% 70% at 50% -10%, rgba(95,176,232,.18) 0%, transparent 65%)}
-  .hero-sash{position:absolute;top:38%;left:-10%;width:120%;height:130px;background:linear-gradient(90deg,var(--rojo) 0%,var(--rojo) 92%,var(--celeste) 100%);transform:rotate(-8deg);opacity:.14;pointer-events:none;animation:hero-sash-drift 14s ease-in-out infinite}
-  @keyframes hero-sash-drift{0%,100%{transform:rotate(-8deg) translateY(0)}50%{transform:rotate(-8deg) translateY(-10px)}}
-  .hero-crest{position:relative;width:76px;height:76px;margin:0 auto 16px;border-radius:22px;box-shadow:0 10px 30px rgba(215,38,61,.25),0 10px 30px rgba(95,176,232,.15)}
-  .hero-word{position:relative;font-size:min(11vw,46px);font-weight:800;font-stretch:condensed;letter-spacing:.02em;text-transform:uppercase;color:var(--text)}
-  .hero-sub{position:relative;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--celeste);font-weight:700;margin-top:8px}
-  .hero-tag{position:relative;font-size:13px;color:var(--text3);margin-top:10px;font-style:italic}
-  .hero-count{position:relative;display:inline-block;margin-top:18px;padding:7px 16px;border-radius:99px;background:rgba(95,176,232,.12);border:1px solid rgba(95,176,232,.3);color:var(--celeste);font-size:12px;font-weight:700}
-  @media (prefers-reduced-motion: reduce){ .hero-sash{animation:none} }
+  .wrap{max-width:1200px;margin:0 auto;padding:calc(24px + env(safe-area-inset-top,0px)) 18px calc(50px + var(--sab))}
 
-/* ═══════════════════════════════════════════════════════════════
-   IDENTIDAD FRIGURSO — splash de marca (mismo bloque de las otras 20 apps)
-   ═══════════════════════════════════════════════════════════════ */
-#fg-splash{
-  position:fixed;inset:0;z-index:9000;background:#0b1220;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;
-  animation:fg-splash-out .6s ease 2.8s forwards;
-}
-.fg-sash{
-  position:absolute;width:130vw;height:22vh;max-height:170px;
-  background:linear-gradient(90deg,#d7263d 0%,#d7263d 92%,#5fb0e8 100%);
-  transform:rotate(-22deg) translateX(-140vw);top:46%;left:0;margin-top:-11vh;
-  box-shadow:0 0 60px rgba(215,38,61,.3);
-  animation:fg-sash-sweep 1.3s cubic-bezier(.16,.8,.24,1) both;
-}
-@keyframes fg-sash-sweep{0%{transform:rotate(-22deg) translateX(-140vw);}55%{transform:rotate(-22deg) translateX(0);}100%{transform:rotate(-22deg) translateX(0);}}
-@keyframes fg-splash-out{to{opacity:0;pointer-events:none;visibility:hidden;}}
-.fg-wordmark{
-  position:relative;z-index:5;font-weight:800;font-stretch:condensed;
-  font-size:min(11vw,42px);letter-spacing:.02em;
-  color:#f5f7fa;text-transform:uppercase;
-  opacity:0;transform:translateY(10px);animation:fg-word-in .5s ease .85s both;
-}
-@keyframes fg-word-in{to{opacity:1;transform:translateY(0);}}
-.fg-tagline{
-  position:relative;z-index:5;font-family:monospace;font-size:11px;letter-spacing:.18em;
-  text-transform:uppercase;color:#9fb0cc;margin-top:8px;
-  opacity:0;animation:fg-word-in .5s ease 1.05s both;
-}
-@media (prefers-reduced-motion: reduce){
-  .fg-sash{animation:none;transform:rotate(-22deg) translateX(0);}
-  .fg-wordmark,.fg-tagline{animation:none;opacity:1;transform:none;}
-  #fg-splash{animation-delay:.1s;}
-}
+  /* ── HEADER ── */
+  .topbar{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;flex-wrap:wrap;margin-bottom:22px}
+  .topbar h1{font-size:26px;font-weight:800;font-stretch:condensed;letter-spacing:.01em;display:flex;align-items:center;gap:10px}
+  .topbar h1 .accent{background:linear-gradient(90deg,var(--rojo),var(--celeste));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .subtitle{font-size:11px;letter-spacing:1.6px;color:var(--muted);text-transform:uppercase;margin-top:6px}
+  .clock{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:10px 16px;text-align:right;min-width:190px}
+  .clock .fecha{font-size:11px;color:var(--muted);text-transform:capitalize}
+  .clock .hora{font-size:19px;font-weight:800;margin-top:2px;font-variant-numeric:tabular-nums}
 
-  .search-wrap{padding:0 16px;margin-top:20px;max-width:640px;margin-left:auto;margin-right:auto}
-  .search-input{width:100%;padding:14px 16px;border-radius:14px;border:1px solid var(--border);background:var(--bg3);color:var(--text);font-size:15px}
+  /* ── BANNER ── */
+  .banner{
+    position:relative;overflow:hidden;border-radius:22px;border:1px solid var(--border);
+    background:linear-gradient(135deg,#152548 0%,#0d1730 55%,#0a1226 100%);
+    padding:30px 28px;margin-bottom:16px;
+  }
+  .banner-sash{
+    position:absolute;top:-30%;left:-10%;width:75%;height:220%;
+    background:linear-gradient(90deg,var(--rojo) 0%,var(--rojo) 92%,var(--celeste) 100%);
+    transform:rotate(-13deg);opacity:.16;pointer-events:none;
+  }
+  .banner-kicker{position:relative;font-family:var(--mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--celeste);font-weight:700}
+  .banner h2{position:relative;font-size:clamp(21px,3.2vw,29px);font-weight:800;font-stretch:condensed;margin:9px 0 8px;max-width:640px;text-wrap:balance}
+  .banner p{position:relative;color:var(--muted);font-size:13px;line-height:1.6;max-width:600px}
+
+  /* ── ORGANIZER ── */
+  .organizer{
+    display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;
+    background:rgba(95,176,232,.06);border:1px solid #24406e;border-radius:14px;
+    padding:12px 16px;color:var(--muted);font-size:12px;margin-bottom:18px;
+  }
+  .organizer b{color:var(--text)}
+  .organizer button{background:#16223f;color:#dce9ff;border:1px solid #365784;border-radius:9px;padding:8px 13px;cursor:pointer;font-weight:700;font-size:12px;flex-shrink:0}
+  .organizer button:hover{border-color:var(--celeste)}
+
+  /* ── BUSCADOR + FILTROS ── */
+  .search-input{
+    width:100%;padding:13px 15px;border-radius:13px;border:1px solid var(--border);
+    background:var(--card2);color:var(--text);font-size:14px;margin-bottom:12px;
+  }
   .search-input:focus{outline:none;border-color:var(--celeste)}
-  .search-input::placeholder{color:var(--text3)}
-
-  .pill-row{display:flex;gap:8px;overflow-x:auto;padding:16px 16px 4px;max-width:1040px;margin:0 auto}
-  .pill{padding:9px 16px;border-radius:99px;font-size:12px;font-weight:700;border:1px solid var(--border);background:var(--bg3);color:var(--text2);cursor:pointer;white-space:nowrap;flex-shrink:0}
+  .search-input::placeholder{color:var(--muted2)}
+  .pill-row{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;margin-bottom:22px}
+  .pill{padding:8px 15px;border-radius:99px;font-size:11.5px;font-weight:700;border:1px solid var(--border);background:var(--card2);color:var(--muted);cursor:pointer;white-space:nowrap;flex-shrink:0}
   .pill.sel{background:linear-gradient(90deg,var(--rojo),var(--celeste));border-color:transparent;color:#fff}
 
-  .grid-wrap{max-width:1040px;margin:0 auto;padding:14px 16px calc(50px + var(--sab))}
-  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:12px}
-  .app-card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:18px 14px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px;box-shadow:var(--shadow);transition:transform .15s,border-color .15s,box-shadow .15s;position:relative;overflow:hidden;opacity:0;animation:card-in .45s ease both}
-  .app-card:active{transform:scale(.96)}
-  .app-card:hover{transform:translateY(-3px);border-color:rgba(95,176,232,.4);box-shadow:0 10px 28px rgba(0,0,0,.4)}
-  .app-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--rojo),var(--celeste));opacity:0;transition:opacity .15s}
-  .app-card:hover::before{opacity:1}
-  @keyframes card-in{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+  /* ── SECCIONES ── */
+  .section-title{
+    display:flex;align-items:center;gap:10px;margin:26px 0 12px;
+    font-size:11px;letter-spacing:1.8px;color:var(--muted);text-transform:uppercase;font-weight:700;
+  }
+  .section-title .count{font-family:var(--mono);color:var(--muted2);font-weight:400;letter-spacing:0;text-transform:none}
+  .section-title:first-child{margin-top:0}
+
+  /* ── TARJETAS ── */
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px}
+  .app-card{
+    display:flex;flex-direction:column;text-align:left;
+    background:linear-gradient(180deg,var(--card),var(--card2));
+    border:1px solid var(--border);border-radius:18px;padding:20px 20px 18px;
+    min-height:170px;position:relative;overflow:hidden;cursor:pointer;
+    transition:transform .16s ease,border-color .16s ease,box-shadow .16s ease;
+    opacity:0;animation:card-in .4s ease both;
+  }
+  .app-card::after{content:'';position:absolute;left:0;right:0;bottom:0;height:3px;background:var(--color)}
+  .app-card:hover{transform:translateY(-4px);border-color:var(--color);box-shadow:0 14px 34px rgba(0,0,0,.35)}
+  .app-card:active{transform:translateY(-1px) scale(.99)}
+  .app-card.dragging{opacity:.35!important;transform:scale(.97)}
+  .app-card.drag-over{outline:2px dashed var(--color);outline-offset:3px}
+  @keyframes card-in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
   @media (prefers-reduced-motion: reduce){ .app-card{animation:none;opacity:1} .app-card:hover{transform:none} }
-  .app-icon{width:54px;height:54px;border-radius:16px;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:26px}
-  .app-name{font-size:13px;font-weight:800;color:var(--text);line-height:1.25}
-  .app-desc{font-size:10.5px;color:var(--text3);line-height:1.4}
-  .app-cat{font-size:9px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--celeste);opacity:.85}
 
-  .empty{text-align:center;padding:60px 20px;color:var(--text3)}
-  .empty-icon{font-size:46px;margin-bottom:10px}
+  .app-tag{position:absolute;right:14px;top:14px;border:1px solid var(--border);background:rgba(3,8,20,.55);border-radius:99px;padding:4px 10px;font-size:8.5px;color:var(--muted);letter-spacing:.5px;text-transform:uppercase;font-weight:700}
+  .app-icon{font-size:30px;margin-bottom:12px}
+  .app-name{font-size:16px;font-weight:800;color:var(--text);margin-bottom:5px}
+  .app-desc{font-size:12px;color:var(--muted);line-height:1.55;flex:1}
+  .app-go{margin-top:14px;font-size:11.5px;font-weight:800;color:var(--color)}
+  .drag-handle{position:absolute;right:14px;bottom:12px;color:var(--muted2);font-weight:900;letter-spacing:-2px;font-size:13px;opacity:0;transition:opacity .15s}
+  .app-card:hover .drag-handle{opacity:1}
 
-  .foot{text-align:center;padding:10px 20px calc(30px + var(--sab));color:var(--text3);font-size:11px;line-height:1.6}
+  .empty{text-align:center;padding:60px 20px;color:var(--muted)}
+  .empty-icon{font-size:44px;margin-bottom:10px}
+
+  .note{
+    margin-top:26px;background:rgba(95,176,232,.06);border:1px solid #24406e;border-left:3px solid var(--celeste);
+    border-radius:12px;padding:13px 16px;color:var(--muted);font-size:11.5px;line-height:1.65;
+  }
+  footer{text-align:center;color:var(--muted2);font-size:11px;margin-top:22px}
+
+  .toast{position:fixed;bottom:calc(20px + var(--sab));left:50%;transform:translateX(-50%) translateY(20px);background:var(--celeste);color:#04211d;padding:11px 20px;border-radius:99px;font-size:13px;font-weight:700;opacity:0;transition:all .25s;z-index:9999;white-space:nowrap;pointer-events:none;max-width:88vw;overflow:hidden;text-overflow:ellipsis}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0);pointer-events:all}
+  .toast u{cursor:pointer}
 </style>
 </head>
 <body>
 
-<div id="fg-splash" aria-hidden="true">
-  <div class="fg-sash"></div>
-  <div class="fg-wordmark">Frigurso</div>
-  <div class="fg-tagline">Centro de Control</div>
+<div class="toast" id="toast"></div>
+
+<div class="wrap">
+
+  <header class="topbar">
+    <div>
+      <h1>🧭 Centro de Control · <span class="accent">Frigurso</span></h1>
+      <div class="subtitle" id="contador-apps">El ramo general de tu vida digital</div>
+    </div>
+    <div class="clock"><div class="fecha" id="reloj-fecha">—</div><div class="hora" id="reloj-hora">—</div></div>
+  </header>
+
+  <section class="banner">
+    <div class="banner-sash"></div>
+    <div class="banner-kicker">Portafolio personal</div>
+    <h2>Veinte apps propias, una sola puerta de entrada</h2>
+    <p>Finanzas, salud, seguridad, hogar y diversión — cada una vive en su propio lugar, con su propia lógica y su propio cifrado cuando hace falta. Este panel no guarda ni ve nada de lo que hay adentro: solo abre la app real.</p>
+  </section>
+
+  <div class="organizer">
+    <div><b>Personalizá tu Centro de Control</b> — arrastrá las tarjetas dentro de una categoría y soltalas donde quieras. El orden queda guardado en este dispositivo.</div>
+    <button type="button" onclick="restablecerOrden()">Restablecer orden</button>
+  </div>
+
+  <input class="search-input" id="buscador" placeholder="Buscar una app por nombre o función..." oninput="render()">
+  <div class="pill-row" id="pill-categorias"></div>
+
+  <div id="secciones"></div>
+
+  <div class="note"><b>Nota:</b> cada tarjeta abre la URL real publicada de esa app en una pestaña nueva. Ninguna comparte datos, login ni almacenamiento con las demás — siguen siendo completamente independientes.</div>
+  <footer>Centro de Control · Frigurso — el ramo general de tu vida digital</footer>
 </div>
-
-<div class="hero">
-  <div class="hero-sash"></div>
-  <svg class="hero-crest" viewBox="0 0 512 512" role="img" aria-label="Frigurso">
-    <defs>
-      <linearGradient id="crestSash" x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0" stop-color="#D7263D"/>
-        <stop offset="1" stop-color="#5FB0E8"/>
-      </linearGradient>
-      <clipPath id="crestClip"><rect width="512" height="512" rx="112"/></clipPath>
-    </defs>
-    <g clip-path="url(#crestClip)">
-      <rect width="512" height="512" fill="#0b1220"/>
-      <text x="256" y="392" text-anchor="middle" font-family="-apple-system,'Segoe UI',sans-serif"
-        font-weight="800" font-size="440" fill="#f5f7fa" style="font-stretch:condensed">F</text>
-      <rect x="-60" y="150" width="640" height="120" fill="url(#crestSash)" transform="rotate(-14 256 256)"/>
-    </g>
-  </svg>
-  <div class="hero-word">Frigurso</div>
-  <div class="hero-sub">Centro de Control</div>
-  <div class="hero-tag">El ramo general de tu vida digital</div>
-  <div class="hero-count" id="contador-apps">0 apps</div>
-</div>
-
-<div class="search-wrap">
-  <input class="search-input" id="buscador" placeholder="Buscar una app..." oninput="render()">
-</div>
-
-<div class="pill-row" id="pill-categorias"></div>
-
-<div class="grid-wrap">
-  <div class="grid" id="grid-apps"></div>
-</div>
-
-<div class="foot">Frigurso Seguridad guarda tus contraseñas — este panel solo abre las apps, no ve nada de lo que hay adentro de cada una.</div>
 
 <script>
 const APPS=[
-  {nombre:'FootGolf', icono:'🏌️', desc:'La app de FootGolf más completa del mundo', url:'https://frigurso.vercel.app', cat:'Deporte'},
-  {nombre:'Salud', icono:'🩺', desc:'Deporte GPS, mediciones, nutrición y rutinas', url:'https://fernandoanzisi.github.io/frigurso-salud/', cat:'Deporte'},
-  {nombre:'Canchita', icono:'⚽', desc:'Partidos, jugadores y estadísticas de fulbito', url:'https://fernandoanzisi.github.io/frigurso-canchita/', cat:'Deporte'},
-  {nombre:'Fútbol', icono:'🥅', desc:'Resultados, posiciones y ficha de tu equipo', url:'https://fernandoanzisi.github.io/frigurso-futbol/', cat:'Deporte'},
-  {nombre:'Finanzas', icono:'💰', desc:'Gastos, cuentas, tarjetas, inversiones y viajes', url:'https://fernandoanzisi.github.io/frigurso-finanzas/', cat:'Finanzas'},
-  {nombre:'Sistema Financiero', icono:'💼', desc:'Flujo de fondos, órdenes de pago y conciliación', url:'https://fernandoanzisi.github.io/frigurso-sistema-financiero-contable/', cat:'Finanzas'},
-  {nombre:'Wallet Central', icono:'👛', desc:'Bancos y billeteras consolidados, cotizaciones', url:'https://fernandoanzisi.github.io/frigurso-wallet-central/', cat:'Finanzas'},
-  {nombre:'Conciliaciones', icono:'🔄', desc:'Motor de conciliación bancaria e informes', url:'https://fernandoanzisi.github.io/frigurso-conciliaciones/', cat:'Finanzas'},
-  {nombre:'Inversiones', icono:'📈', desc:'Cartera, acciones, cripto y dólar en vivo', url:'https://fernandoanzisi.github.io/frigurso-inversiones/', cat:'Finanzas'},
-  {nombre:'Seguridad', icono:'🔒', desc:'Tu bóveda de contraseñas, cifrada', url:'https://fernandoanzisi.github.io/frigurso-seguridad/', cat:'Utilidades'},
-  {nombre:'Agenda', icono:'📅', desc:'Recordatorios con Web Push, entrada rápida', url:'https://fernandoanzisi.github.io/frigurso-agenda/', cat:'Utilidades'},
-  {nombre:'Satelital', icono:'🛰️', desc:'GPS satelital, radares, combustible y ruta', url:'https://fernandoanzisi.github.io/frigurso-satelital/', cat:'Utilidades'},
-  {nombre:'Control', icono:'🖱️', desc:'Tu celular como mouse, teclado y presentador', url:'https://fernandoanzisi.github.io/frigurso-control/', cat:'Utilidades'},
-  {nombre:'Lector', icono:'📖', desc:'OCR de fotos y escaneos a libro legible', url:'https://frigurso-lector.vercel.app', cat:'Utilidades'},
-  {nombre:'Escuela', icono:'🏫', desc:'Gestión integral: académico, edificio y finanzas', url:'https://fernandoanzisi.github.io/FRIGURSO-ESCUELA/', cat:'Utilidades'},
-  {nombre:'Clima', icono:'⛅', desc:'Clima real, satélite, polen y despertador con voz', url:'https://fernandoanzisi.github.io/frigurso-clima/', cat:'Hogar y vida'},
-  {nombre:'Cocina', icono:'🍳', desc:'141 recetas propias y lugares reales para comer', url:'https://fernandoanzisi.github.io/frigurso-cocina/', cat:'Hogar y vida'},
-  {nombre:'Música', icono:'🎵', desc:'Música local, listas, ranking y letras traducidas', url:'https://fernandoanzisi.github.io/frigurso-musica/', cat:'Diversión'},
-  {nombre:'Mini Juegos', icono:'🎉', desc:'Tutti Fruti, Preguntados, Ahorcado y más', url:'https://fernandoanzisi.github.io/frigurso-tutti-fruti/', cat:'Diversión'},
-  {nombre:'Ingeniería', icono:'🧪', desc:'Apuntes y calculadoras de Ing. Química FIUBA', url:'https://fernandoanzisi.github.io/frigurso-ingenieria/', cat:'Estudio'},
+  {id:'footgolf', nombre:'FootGolf', icono:'🏌️', desc:'La app de FootGolf más completa del mundo', url:'https://frigurso.vercel.app', cat:'Deporte'},
+  {id:'salud', nombre:'Salud', icono:'🩺', desc:'Deporte GPS, mediciones, nutrición y rutinas', url:'https://fernandoanzisi.github.io/frigurso-salud/', cat:'Deporte'},
+  {id:'canchita', nombre:'Canchita', icono:'⚽', desc:'Partidos, jugadores y estadísticas de fulbito', url:'https://fernandoanzisi.github.io/frigurso-canchita/', cat:'Deporte'},
+  {id:'futbol', nombre:'Fútbol', icono:'🥅', desc:'Resultados, posiciones y ficha de tu equipo', url:'https://fernandoanzisi.github.io/frigurso-futbol/', cat:'Deporte'},
+  {id:'finanzas', nombre:'Finanzas', icono:'💰', desc:'Gastos, cuentas, tarjetas, inversiones y viajes', url:'https://fernandoanzisi.github.io/frigurso-finanzas/', cat:'Finanzas'},
+  {id:'sistema-financiero', nombre:'Sistema Financiero', icono:'💼', desc:'Flujo de fondos, órdenes de pago y conciliación', url:'https://fernandoanzisi.github.io/frigurso-sistema-financiero-contable/', cat:'Finanzas'},
+  {id:'wallet-central', nombre:'Wallet Central', icono:'👛', desc:'Bancos y billeteras consolidados, cotizaciones', url:'https://fernandoanzisi.github.io/frigurso-wallet-central/', cat:'Finanzas'},
+  {id:'conciliaciones', nombre:'Conciliaciones', icono:'🔄', desc:'Motor de conciliación bancaria e informes', url:'https://fernandoanzisi.github.io/frigurso-conciliaciones/', cat:'Finanzas'},
+  {id:'inversiones', nombre:'Inversiones', icono:'📈', desc:'Cartera, acciones, cripto y dólar en vivo', url:'https://fernandoanzisi.github.io/frigurso-inversiones/', cat:'Finanzas'},
+  {id:'seguridad', nombre:'Seguridad', icono:'🔒', desc:'Tu bóveda de contraseñas, cifrada', url:'https://fernandoanzisi.github.io/frigurso-seguridad/', cat:'Utilidades'},
+  {id:'agenda', nombre:'Agenda', icono:'📅', desc:'Recordatorios con Web Push, entrada rápida', url:'https://fernandoanzisi.github.io/frigurso-agenda/', cat:'Utilidades'},
+  {id:'satelital', nombre:'Satelital', icono:'🛰️', desc:'GPS satelital, radares, combustible y ruta', url:'https://fernandoanzisi.github.io/frigurso-satelital/', cat:'Utilidades'},
+  {id:'control', nombre:'Control', icono:'🖱️', desc:'Tu celular como mouse, teclado y presentador', url:'https://fernandoanzisi.github.io/frigurso-control/', cat:'Utilidades'},
+  {id:'lector', nombre:'Lector', icono:'📖', desc:'OCR de fotos y escaneos a libro legible', url:'https://frigurso-lector.vercel.app', cat:'Utilidades'},
+  {id:'escuela', nombre:'Escuela', icono:'🏫', desc:'Gestión integral: académico, edificio y finanzas', url:'https://fernandoanzisi.github.io/FRIGURSO-ESCUELA/', cat:'Utilidades'},
+  {id:'clima', nombre:'Clima', icono:'⛅', desc:'Clima real, satélite, polen y despertador con voz', url:'https://fernandoanzisi.github.io/frigurso-clima/', cat:'Hogar y vida'},
+  {id:'cocina', nombre:'Cocina', icono:'🍳', desc:'141 recetas propias y lugares reales para comer', url:'https://fernandoanzisi.github.io/frigurso-cocina/', cat:'Hogar y vida'},
+  {id:'musica', nombre:'Música', icono:'🎵', desc:'Música local, listas, ranking y letras traducidas', url:'https://fernandoanzisi.github.io/frigurso-musica/', cat:'Diversión'},
+  {id:'mini-juegos', nombre:'Mini Juegos', icono:'🎉', desc:'Tutti Fruti, Preguntados, Ahorcado y más', url:'https://fernandoanzisi.github.io/frigurso-tutti-fruti/', cat:'Diversión'},
+  {id:'ingenieria', nombre:'Ingeniería', icono:'🧪', desc:'Apuntes y calculadoras de Ing. Química FIUBA', url:'https://fernandoanzisi.github.io/frigurso-ingenieria/', cat:'Estudio'},
 ];
 
-const CATEGORIAS=['Todas','Finanzas','Deporte','Hogar y vida','Diversión','Estudio','Utilidades'];
+const CATEGORIAS=['Finanzas','Deporte','Hogar y vida','Diversión','Estudio','Utilidades'];
+const CAT_COLOR={'Finanzas':'#ffc64d','Deporte':'#5ddd7d','Hogar y vida':'#fb923c','Diversión':'#bd7cff','Estudio':'#2dd4bf','Utilidades':'#5FB0E8'};
 let _cat='Todas';
 
 function renderPills(){
-  document.getElementById('pill-categorias').innerHTML=CATEGORIAS.map(c=>
+  document.getElementById('pill-categorias').innerHTML=['Todas',...CATEGORIAS].map(c=>
     `<button class="pill ${_cat===c?'sel':''}" onclick="_filtrar('${c}')">${c}</button>`
   ).join('');
 }
 function _filtrar(c){ _cat=c; renderPills(); render(); }
-
 function _esc(s){ return (s||'').replace(/[&<>"]/g, ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch])); }
 
-function render(){
-  const q=(document.getElementById('buscador').value||'').toLowerCase().trim();
-  let lista=APPS.slice();
-  if(_cat!=='Todas') lista=lista.filter(a=>a.cat===_cat);
-  if(q) lista=lista.filter(a=>a.nombre.toLowerCase().includes(q)||a.desc.toLowerCase().includes(q));
+// ═══════════════════════════════════════════════════════════════
+// ORDEN PERSONALIZADO (arrastrar y soltar, guardado por categoría)
+// ═══════════════════════════════════════════════════════════════
+const ORDEN_KEY='figcc_orden';
+function _ordenGuardado(){ try{ return JSON.parse(localStorage.getItem(ORDEN_KEY)||'{}'); }catch(e){ return {}; } }
+function _guardarOrdenCategoria(cat, ids){ const o=_ordenGuardado(); o[cat]=ids; localStorage.setItem(ORDEN_KEY, JSON.stringify(o)); }
+function _ordenarPorCategoria(apps, cat){
+  const guardado=_ordenGuardado()[cat];
+  if(!guardado) return apps;
+  const rank=id=>{ const i=guardado.indexOf(id); return i===-1?999:i; };
+  return apps.slice().sort((a,b)=>rank(a.id)-rank(b.id));
+}
+function restablecerOrden(){
+  localStorage.removeItem(ORDEN_KEY);
+  render();
+  toast('Orden restablecido');
+}
 
-  document.getElementById('contador-apps').textContent=APPS.length+' apps en un solo lugar';
-
-  const grid=document.getElementById('grid-apps');
-  if(!lista.length){
-    grid.innerHTML=`<div class="empty" style="grid-column:1/-1"><div class="empty-icon">🔍</div>Sin resultados</div>`;
-    return;
-  }
-  grid.innerHTML=lista.map((a,i)=>`
-    <a class="app-card" href="${a.url}" target="_blank" rel="noopener" style="animation-delay:${Math.min(i*30,300)}ms">
+function _tarjetaHTML(a){
+  const color=CAT_COLOR[a.cat]||'#5FB0E8';
+  return `
+    <a class="app-card" style="--color:${color}" draggable="true" data-id="${a.id}" href="${a.url}" target="_blank" rel="noopener">
+      <span class="app-tag">${_esc(a.cat)}</span>
       <div class="app-icon">${a.icono}</div>
       <div class="app-name">${_esc(a.nombre)}</div>
       <div class="app-desc">${_esc(a.desc)}</div>
-      <div class="app-cat">${_esc(a.cat)}</div>
+      <div class="app-go">Abrir app →</div>
+      <span class="drag-handle">⋮⋮</span>
     </a>
-  `).join('');
+  `;
+}
+
+function _hacerArrastrable(gridEl, cat){
+  let arrastrado=null;
+  gridEl.querySelectorAll('.app-card').forEach(card=>{
+    card.addEventListener('dragstart', e=>{ arrastrado=card; card.classList.add('dragging'); e.dataTransfer.effectAllowed='move'; });
+    card.addEventListener('dragend', ()=>{
+      card.classList.remove('dragging');
+      gridEl.querySelectorAll('.app-card').forEach(c=>c.classList.remove('drag-over'));
+      arrastrado=null;
+      _guardarOrdenCategoria(cat, [...gridEl.querySelectorAll('.app-card')].map(c=>c.dataset.id));
+    });
+    card.addEventListener('dragover', e=>{ e.preventDefault(); if(card!==arrastrado) card.classList.add('drag-over'); });
+    card.addEventListener('dragleave', ()=>card.classList.remove('drag-over'));
+    card.addEventListener('drop', e=>{
+      e.preventDefault();
+      card.classList.remove('drag-over');
+      if(!arrastrado || arrastrado===card) return;
+      const cards=[...gridEl.children], from=cards.indexOf(arrastrado), to=cards.indexOf(card);
+      if(from<to) gridEl.insertBefore(arrastrado, card.nextSibling); else gridEl.insertBefore(arrastrado, card);
+    });
+  });
+}
+
+function render(){
+  const q=(document.getElementById('buscador').value||'').toLowerCase().trim();
+  let base=APPS.slice();
+  if(q) base=base.filter(a=>a.nombre.toLowerCase().includes(q)||a.desc.toLowerCase().includes(q));
+
+  document.getElementById('contador-apps').textContent=APPS.length+' apps en un solo lugar';
+
+  const cont=document.getElementById('secciones');
+
+  if(!base.length){
+    cont.innerHTML=`<div class="empty"><div class="empty-icon">🔍</div>Sin resultados</div>`;
+    return;
+  }
+
+  let html='';
+  if(_cat!=='Todas'){
+    const lista=_ordenarPorCategoria(base.filter(a=>a.cat===_cat), _cat);
+    html=`<div class="grid" id="grid-${_cat}">${lista.map(_tarjetaHTML).join('')}</div>`;
+  } else if(q){
+    html=`<div class="grid" id="grid-busqueda">${base.map(_tarjetaHTML).join('')}</div>`;
+  } else {
+    html=CATEGORIAS.map(cat=>{
+      const lista=_ordenarPorCategoria(base.filter(a=>a.cat===cat), cat);
+      if(!lista.length) return '';
+      return `<div class="section-title">${cat} <span class="count">(${lista.length})</span></div>
+              <div class="grid" id="grid-${cat.replace(/\s+/g,'-')}">${lista.map(_tarjetaHTML).join('')}</div>`;
+    }).join('');
+  }
+  cont.innerHTML=html;
+
+  if(_cat!=='Todas' && !q){
+    _hacerArrastrable(document.getElementById('grid-'+_cat), _cat);
+  } else if(!q){
+    CATEGORIAS.forEach(cat=>{
+      const el=document.getElementById('grid-'+cat.replace(/\s+/g,'-'));
+      if(el) _hacerArrastrable(el, cat);
+    });
+  }
 }
 
 renderPills();
 render();
 
+// ═══════════════════════════════════════════════════════════════
+// RELOJ
+// ═══════════════════════════════════════════════════════════════
+const DIAS=['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
+const MESES=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+function _tickReloj(){
+  const n=new Date();
+  document.getElementById('reloj-fecha').textContent=DIAS[n.getDay()]+' '+n.getDate()+' de '+MESES[n.getMonth()];
+  document.getElementById('reloj-hora').textContent=n.toLocaleTimeString('es-AR',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+}
+_tickReloj();
+setInterval(_tickReloj, 1000);
+
+// ═══════════════════════════════════════════════════════════════
+// TOAST
+// ═══════════════════════════════════════════════════════════════
+let _toastTimer=null;
+function toast(msg){
+  const el=document.getElementById('toast');
+  el.innerHTML=msg;
+  el.classList.add('show');
+  clearTimeout(_toastTimer);
+  _toastTimer=setTimeout(()=>el.classList.remove('show'), 2400);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// SERVICE WORKER — instala en segundo plano, avisa antes de recargar
+// ═══════════════════════════════════════════════════════════════
+let _swRegistration=null;
+function avisarNuevaVersion(){
+  const el=document.getElementById('toast');
+  clearTimeout(_toastTimer);
+  el.innerHTML='🔄 Hay una versión nueva — <u>tocá para actualizar</u>';
+  el.onclick=()=>{ if(_swRegistration&&_swRegistration.waiting) _swRegistration.waiting.postMessage({type:'SKIP_WAITING'}); };
+  el.classList.add('show');
+}
 if('serviceWorker' in navigator){
-  window.addEventListener('load', ()=>{ navigator.serviceWorker.register('sw.js').catch(()=>{}); });
+  navigator.serviceWorker.register('sw.js').then(reg=>{
+    _swRegistration=reg;
+    reg.addEventListener('updatefound', ()=>{
+      const nuevo=reg.installing;
+      if(!nuevo) return;
+      nuevo.addEventListener('statechange', ()=>{
+        if(nuevo.state==='installed' && navigator.serviceWorker.controller) avisarNuevaVersion();
+      });
+    });
+  }).catch(()=>{});
+  navigator.serviceWorker.addEventListener('controllerchange', ()=>location.reload());
 }
 </script>
 </body>
