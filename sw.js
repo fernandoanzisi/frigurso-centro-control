@@ -1,4 +1,4 @@
-const CACHE = 'centro-control-v2';
+const CACHE = 'centro-control-v3';
 const PRECACHE = ['./', './index.html', './manifest.json'];
 
 self.addEventListener('install', e => {
